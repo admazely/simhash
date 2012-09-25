@@ -33,10 +33,10 @@ Simhash.prototype.accumulate = function(buffers) {
 }
 
 Simhash.prototype.hash = function(tokens) {
-    var hashed = [];
+    var hashed = new Array(tokens.length);
     for(var i = 0; i < tokens.length; ++i) {
         var token = tokens[i];
-        hashed.push(crc32(token));
+        hashed[i] = this._hash(token);
     }
     var result = this.accumulate(hashed);
     for(var i = 0; i < result.length; ++i) {
