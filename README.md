@@ -15,15 +15,19 @@ Simhash is hash that returns similar hash(es) for similar input - in contrast to
 
 ```JavaScript
 // will use crc32 as crypto algorithm as standard
-var simhash1 = require('simhash')();
+var simhash = require('simhash')();
 
-var result1 = simhash1(['a', 'list', 'of', 'tokens']);
-// returns an array of zeros and ones
+var result1 = simhash(['a', 'list', 'of', 'a', 'couple', 'of', 'tokens']);
+// return1 is [0,0,0,1,0,0,1,1,1,0,1,1,0,1,1,0,1,0,0,0,1,1,0,1,0,1,0,1,0,0,1,0]
 
-// you can also define what algorithm to use
-var simhash2 = require('simhash')('md5');
+var result2 = simhash(['a', 'list', 'of', 'a', 'couple', 'of', 'tokens', '!']);
+// result2 is [0,0,0,1,0,0,0,1,1,0,0,1,0,1,1,0,1,0,0,0,1,1,0,1,0,1,0,1,0,0,1,0]
+```
 
-var result2 = simhash2(['a', 'list', 'of', 'tokens']);
-// result2 is an array of zeros and ones
-console.assert(result1 !== result2);
+You can also choose to use another algoritm than the standard crc32 one
+
+```Javascript
+var simhash = require('simhash')('md5');
+
+var result = simhash(['a', 'list', 'of', 'a', 'couple', 'of', 'tokens']);
 ```
