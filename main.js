@@ -2,20 +2,15 @@ var crypto = require('crypto');
 var crc32 = require('buffer-crc32');
 
 function Simhash(algorithm) {
+    this.algorithm = algorithm;
     // crc32 is the default algorithm
-    if (algorithm === 'crc32' || !algorithm) {
-        this._hash = crc32;
-    } else {
-        this._hash = function(buffer) {
-            var hash = crypto.createHash(algorithm);
-            hash.update(buffer.toString('binary'), 'binary');
-            return new Buffer(hash.digest('binary'), 'binary');
-        }
+    if (!algorithm) {
+        this.algorithm = 'crc32';
     }
-    this.hashLength = this._hash(new Buffer('')).length;
+    this.hashLength = this._hashBuffer(new Buffer('')).length;
 }
 
-Simhash.prototype.accumulate = function(buffers) {
+Simhash.prototype._accumulate = function(buffers) {
     var self = this;
     var accumulated = new Array(this.hashLength * 8);
     for(var i = 0; i < accumulated.length; ++i) {
@@ -32,13 +27,27 @@ Simhash.prototype.accumulate = function(buffers) {
     return accumulated;
 }
 
+Simhash.prototype._hashBuffer = function(buffer) {
+    if (!Buffer.isBuffer(buffer)) {
+        buffer = new Buffer(buffer);
+    }
+
+    if (this.algorithm === 'crc32') {
+        return crc32(buffer);
+    }
+
+    var hash = crypto.createHash(this.algorithm);
+    hash.update(buffer.toString('binary'), 'binary');
+    return new Buffer(hash.digest('binary'), 'binary');
+}
+
 Simhash.prototype.hash = function(tokens) {
     var hashed = new Array(tokens.length);
     for(var i = 0; i < tokens.length; ++i) {
         var token = tokens[i];
-        hashed[i] = this._hash(token);
+        hashed[i] = this._hashBuffer(token);
     }
-    var result = this.accumulate(hashed);
+    var result = this._accumulate(hashed);
     for(var i = 0; i < result.length; ++i) {
         result[i] = result[i] > 0 ? 1 : 0;
     }
