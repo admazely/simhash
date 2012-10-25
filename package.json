@@ -1,7 +1,7 @@
 {
   "name": "simhash",
   "description": "Calculate the simhash value for a list of tokens",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "author": "Admazely <dev@admaze.ly>",
   "maintainers": [
     "David Björklund <david.bjorklund@gmail.com>"
