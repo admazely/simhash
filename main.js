@@ -39,12 +39,12 @@ Simhash.prototype._accumulate = function(input) {
     } else {
         i = input.length;
         while(--i >= 0) {
-            var data = input[i];
+            var buf = input[i];
             var j = 0;
-            var l = 3;
+            var l = buf.length - 1;
             while(j < self.hashLength) {
                 for(var k = 0; k < 8; ++k) {
-                    accumulated[j] += (data[l] & (1 << k)) ? 1 : -1;
+                    accumulated[j] += (buf[l] & (1 << k)) ? 1 : -1;
                     j++;
                 }
                 l--;
